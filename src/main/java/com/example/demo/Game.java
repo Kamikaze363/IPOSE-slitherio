@@ -4,61 +4,57 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.physics.CollisionHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Game extends GameApplication {
-    private Entity player1;
-    private Entity player2;
+    private Player player1;
+    private Player player2;
+    private Food food;
+
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(1000);
         gameSettings.setHeight(800);
+
         gameSettings.setTitle("Slither.io 1v1");
-        gameSettings.setVersion("0.1");
-//        FXGL.getGameScene().setBackgroundColor(Color.BLACK);
+        gameSettings.setVersion("0.3");
+//        gameSettings.setProfilingEnabled(true);
     }
 
     @Override
     protected void initGame() {
-        player1 = FXGL.entityBuilder()
-                .at(333, 400).view(new Circle(20, Color.RED))
-                .buildAndAttach();
-        player2 = FXGL.entityBuilder()
-                .at(666, 400).view(new Circle(20,Color.BLUE))
-                .buildAndAttach();
+        player1 = new Player(333, 400, Color.RED);
+        player2 = new Player(666, 400, Color.BLUE);
 
+        FXGL.getGameWorld().addEntity(player1.getEntity());
+        FXGL.getGameWorld().addEntity(player2.getEntity());
+
+        FXGL.getGameTimer().runAtInterval(() -> {
+            int randomPosX = ThreadLocalRandom.current().nextInt(80, FXGL.getGameScene().getAppWidth() - 80);
+            int randomPosY = ThreadLocalRandom.current().nextInt(80, FXGL.getGameScene().getAppWidth() - 80);
+            food = new Food(randomPosX, randomPosY);
+        }, Duration.seconds(1));
+
+        player1.move(KeyCode.A, KeyCode.D, KeyCode.W, KeyCode.S);
+        player2.move(KeyCode.LEFT, KeyCode.RIGHT, KeyCode.UP, KeyCode.DOWN);
     }
 
     @Override
-    protected void initInput() {
-        FXGL.onKey(KeyCode.D, () ->{
-            player1.translateX(3);
-        });
-        FXGL.onKey(KeyCode.A, () ->{
-            player1.translateX(-3);
-        });
-        FXGL.onKey(KeyCode.W, () ->{
-            player1.translateY(-3);
-        });
-        FXGL.onKey(KeyCode.S, () ->{
-            player1.translateY(3);
-        });
-        FXGL.onKey(KeyCode.RIGHT, () ->{
-            player2.translateX(3);
-        });
-        FXGL.onKey(KeyCode.LEFT, () ->{
-            player2.translateX(-3);
-        });
-        FXGL.onKey(KeyCode.UP, () ->{
-            player2.translateY(-3);
-        });
-        FXGL.onKey(KeyCode.DOWN, () ->{
-            player2.translateY(3);
+    protected void initPhysics() {
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player, EntityTypes.Food) {
+            @Override
+            protected void onCollision(Entity player1, Entity food) {
+                food.removeFromWorld();
+            }
         });
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
