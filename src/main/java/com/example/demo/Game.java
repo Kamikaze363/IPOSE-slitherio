@@ -2,7 +2,10 @@ package com.example.demo;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class Game extends GameApplication {
     private Entity player;
@@ -17,7 +20,9 @@ public class Game extends GameApplication {
 
     @Override
     protected void initGame() {
-        super.initGame();
+        player = FXGL.entityBuilder()
+                .at(400, 400).view(new Rectangle(30, 30, Color.RED))
+                .buildAndAttach();
     }
 
     public static void main(String[] args) {
