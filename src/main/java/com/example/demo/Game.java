@@ -16,6 +16,9 @@ public class Game extends GameApplication {
     private Player player2;
     private Food food;
 
+    private int player1kills = 0;
+    private int player2kills = 0;
+
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(1000);
@@ -23,13 +26,13 @@ public class Game extends GameApplication {
 
         gameSettings.setTitle("Slither.io 1v1");
         gameSettings.setVersion("0.3");
-//        gameSettings.setProfilingEnabled(true);
+        gameSettings.setProfilingEnabled(true);
     }
 
     @Override
     protected void initGame() {
-        player1 = new Player(333, 400, Color.RED);
-        player2 = new Player(666, 400, Color.BLUE);
+        player1 = new Player(100, 400, Color.RED, EntityTypes.Player1);
+        player2 = new Player(900, 400, Color.BLUE, EntityTypes.Player2);
 
         FXGL.getGameWorld().addEntity(player1.getEntity());
         FXGL.getGameWorld().addEntity(player2.getEntity());
@@ -46,10 +49,23 @@ public class Game extends GameApplication {
 
     @Override
     protected void initPhysics() {
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player, EntityTypes.Food) {
+
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player1, EntityTypes.Food) {
             @Override
-            protected void onCollision(Entity player1, Entity food) {
+            protected void onCollision(Entity player, Entity food) {
                 food.removeFromWorld();
+                player1kills += 1;
+                System.out.println("Player 1: " +player1kills);
+
+            }
+        });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player2, EntityTypes.Food) {
+            @Override
+            protected void onCollision(Entity player, Entity food) {
+                food.removeFromWorld();
+                player2kills += 1;
+                System.out.println("Player 2: " +player2kills);
+
             }
         });
     }

@@ -12,11 +12,11 @@ import java.net.URL;
 public class Player {
     private final Entity entity;
 
-    public Player(double x, double y, Color color) {
+    public Player(double x, double y, Color color, EntityTypes type) {
         entity = FXGL.entityBuilder()
                 .at(x, y).viewWithBBox(new Circle(15, color))
                 .with(new CollidableComponent(true))
-                .type(EntityTypes.Player)
+                .type(type)
                 .buildAndAttach();
     }
 
