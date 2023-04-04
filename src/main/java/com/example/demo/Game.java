@@ -14,21 +14,22 @@ public class Game extends GameApplication {
     private Entity player2;
     @Override
     protected void initSettings(GameSettings gameSettings) {
-        gameSettings.setWidth(800);
+        gameSettings.setWidth(1000);
         gameSettings.setHeight(800);
         gameSettings.setTitle("Slither.io 1v1");
         gameSettings.setVersion("0.1");
-
+//        FXGL.getGameScene().setBackgroundColor(Color.BLACK);
     }
 
     @Override
     protected void initGame() {
         player1 = FXGL.entityBuilder()
-                .at(300, 400).view(new Circle(20, Color.RED))
+                .at(333, 400).view(new Circle(20, Color.RED))
                 .buildAndAttach();
         player2 = FXGL.entityBuilder()
-                .at(500, 400).view(new Circle(20,Color.BLUE))
+                .at(666, 400).view(new Circle(20,Color.BLUE))
                 .buildAndAttach();
+
     }
 
     @Override
