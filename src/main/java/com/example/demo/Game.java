@@ -14,6 +14,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Game extends GameApplication {
 
+//    private int snakeLength1 = 30;
+//    private int snakeLength2 = 30;
+
+
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(1000);
@@ -26,8 +30,8 @@ public class Game extends GameApplication {
 
     @Override
     protected void initGame() {
-        Player player1 = new Player(100, 400, Color.RED, EntityTypes.Player1);
-        Player player2 = new Player(900, 400, Color.BLUE, EntityTypes.Player2);
+        Player player1 = new Player(200, 400, Color.RED, EntityTypes.Player1,50);
+        Player player2 = new Player(900, 400, Color.BLUE, EntityTypes.Player2, 50);
 
         FXGL.getGameWorld().addEntity(player1.getEntity());
         FXGL.getGameWorld().addEntity(player2.getEntity());
@@ -48,7 +52,7 @@ public class Game extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player1, EntityTypes.Food) {
             @Override
             protected void onCollision(Entity player, Entity food) {
-                FXGL.inc("kills player 1", + 1);
+                FXGL.inc("kills player 1", +1);
                 food.removeFromWorld();
             }
         });
