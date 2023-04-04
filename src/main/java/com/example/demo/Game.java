@@ -4,6 +4,7 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -23,6 +24,22 @@ public class Game extends GameApplication {
         player = FXGL.entityBuilder()
                 .at(400, 400).view(new Rectangle(30, 30, Color.RED))
                 .buildAndAttach();
+    }
+
+    @Override
+    protected void initInput() {
+        FXGL.onKey(KeyCode.D, () ->{
+            player.translateX(3);
+        });
+        FXGL.onKey(KeyCode.A, () ->{
+            player.translateX(-3);
+        });
+        FXGL.onKey(KeyCode.W, () ->{
+            player.translateY(-3);
+        });
+        FXGL.onKey(KeyCode.S, () ->{
+            player.translateY(3);
+        });
     }
 
     public static void main(String[] args) {
