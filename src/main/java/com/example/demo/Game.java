@@ -5,6 +5,7 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.CollisionHandler;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -55,7 +56,7 @@ public class Game extends GameApplication {
             protected void onCollision(Entity player, Entity food) {
                 food.removeFromWorld();
                 player1kills += 1;
-                System.out.println("Player 1: " +player1kills);
+                System.out.println("Player 1: " + player1kills);
 
             }
         });
@@ -64,13 +65,26 @@ public class Game extends GameApplication {
             protected void onCollision(Entity player, Entity food) {
                 food.removeFromWorld();
                 player2kills += 1;
-                System.out.println("Player 2: " +player2kills);
+                System.out.println("Player 2: " + player2kills);
 
             }
         });
+
     }
 
+    @Override
+    protected void initUI() {
+        Label player1points = new Label("Player 1:" + player1kills);
+        Label player2points = new Label("Player 2:" + player2kills);
+        player1points.setTranslateX(80);
+        player1points.setTranslateY(100);
+        player2points.setTranslateX(80);
+        player2points.setTranslateY(120);
 
+        FXGL.getGameScene().setBackgroundColor(Color.BLACK);
+        FXGL.getGameScene().addUINode(player1points);
+        FXGL.getGameScene().addUINode(player2points);
+    }
 
     public static void main(String[] args) {
         launch(args);

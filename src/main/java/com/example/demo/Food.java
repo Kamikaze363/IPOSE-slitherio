@@ -13,7 +13,7 @@ public class Food {
 
     public Food(double x, double y) {
         entity = FXGL.entityBuilder()
-                .at( x, y).viewWithBBox(new Circle(5, Color.BLACK))
+                .at( x, y).viewWithBBox(new Circle(5, Color.WHITE))
                 .with(new CollidableComponent(true))
                 .type(EntityTypes.Food)
                 .buildAndAttach();
