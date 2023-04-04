@@ -6,6 +6,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class Game extends GameApplication {
@@ -23,10 +24,10 @@ public class Game extends GameApplication {
     @Override
     protected void initGame() {
         player1 = FXGL.entityBuilder()
-                .at(300, 400).view(new Rectangle(30, 30, Color.RED))
+                .at(300, 400).view(new Circle(20, Color.RED))
                 .buildAndAttach();
         player2 = FXGL.entityBuilder()
-                .at(500, 400).view(new Rectangle(30, 30, Color.BLUE))
+                .at(500, 400).view(new Circle(20,Color.BLUE))
                 .buildAndAttach();
     }
 
