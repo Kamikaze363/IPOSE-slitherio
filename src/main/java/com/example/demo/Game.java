@@ -9,7 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Game extends GameApplication {
-    private Entity player;
+    private Entity player1;
+    private Entity player2;
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(800);
@@ -21,24 +22,39 @@ public class Game extends GameApplication {
 
     @Override
     protected void initGame() {
-        player = FXGL.entityBuilder()
-                .at(400, 400).view(new Rectangle(30, 30, Color.RED))
+        player1 = FXGL.entityBuilder()
+                .at(300, 400).view(new Rectangle(30, 30, Color.RED))
+                .buildAndAttach();
+        player2 = FXGL.entityBuilder()
+                .at(500, 400).view(new Rectangle(30, 30, Color.BLUE))
                 .buildAndAttach();
     }
 
     @Override
     protected void initInput() {
         FXGL.onKey(KeyCode.D, () ->{
-            player.translateX(3);
+            player1.translateX(3);
         });
         FXGL.onKey(KeyCode.A, () ->{
-            player.translateX(-3);
+            player1.translateX(-3);
         });
         FXGL.onKey(KeyCode.W, () ->{
-            player.translateY(-3);
+            player1.translateY(-3);
         });
         FXGL.onKey(KeyCode.S, () ->{
-            player.translateY(3);
+            player1.translateY(3);
+        });
+        FXGL.onKey(KeyCode.RIGHT, () ->{
+            player2.translateX(3);
+        });
+        FXGL.onKey(KeyCode.LEFT, () ->{
+            player2.translateX(-3);
+        });
+        FXGL.onKey(KeyCode.UP, () ->{
+            player2.translateY(-3);
+        });
+        FXGL.onKey(KeyCode.DOWN, () ->{
+            player2.translateY(3);
         });
     }
 
