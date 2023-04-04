@@ -7,6 +7,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.net.URL;
+
 public class Player {
     private final Entity entity;
 
