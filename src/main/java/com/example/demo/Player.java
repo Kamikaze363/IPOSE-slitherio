@@ -32,6 +32,7 @@ public class Player {
         }
     }
 
+
     public void move(KeyCode leftKey, KeyCode rightKey, KeyCode upKey, KeyCode downKey) {
         FXGL.onKey(leftKey, () -> {
             moveHead(-2, 0);

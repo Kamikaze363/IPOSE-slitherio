@@ -6,7 +6,6 @@ import com.almasb.fxgl.entity.components.CollidableComponent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import java.net.URL;
 
 public class Food {
     private final Entity entity;
