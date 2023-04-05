@@ -1,5 +1,8 @@
 package com.example.demo;
 
+
 public enum EntityTypes {
-    Player,Food
+    Player1,
+    Player2,
+    Food
 }
