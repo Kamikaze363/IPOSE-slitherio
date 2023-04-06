@@ -66,9 +66,9 @@ public class Game extends GameApplication {
         Player player1 = new Player(200, 400, Color.RED, EntityTypes.Player1, 50);
         Player player2 = new Player(1000, 400, Color.BLUE, EntityTypes.Player2, 50);
 
-        Label Level = new Label("Level" + roundCounter);
-        Level.setTranslateX(1100);
-        Level.setTranslateY(30);
+        Label level = new Label("Level" + roundCounter);
+        level.setTranslateX(1100);
+        level.setTranslateY(30);
 
         Duration timerDuration = Duration.seconds(30);
 
@@ -142,6 +142,7 @@ public class Game extends GameApplication {
 
         FXGL.getGameScene().addUINode(p1pointsCaller);
         FXGL.getGameScene().addUINode(p2pointsCaller);
+        FXGL.getGameScene().addUINode(level);
 
         FXGL.getGameScene().addUINode(player1points);
         FXGL.getGameScene().addUINode(player2points);
