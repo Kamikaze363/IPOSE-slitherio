@@ -5,10 +5,10 @@ import com.almasb.fxgl.entity.component.Component;
 import javafx.geometry.Point2D;
 
 
-public class fireTowardsPlayerComponent extends Component {
+public class FireTowardsPlayerComponent extends Component {
     private final Entity player;
 
-    fireTowardsPlayerComponent (Entity player) {
+    FireTowardsPlayerComponent(Entity player) {
         this.player = player;
     }
     @Override
