@@ -18,6 +18,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -51,7 +55,15 @@ public class Game extends GameApplication {
         settings.setIntroEnabled(true);
 
         settings.setEnabledMenuItems(EnumSet.of(MenuItem.EXTRA));
+        settings.getAchievements().addAll(List.of(
 
+        ));
+        settings.getAchievements().addAll(Arrays.asList());
+
+        settings.setEnabledMenuItems(EnumSet.of(MenuItem.EXTRA));
+
+        settings.getAchievements().addAll(List.of(
+        ));
         settings.getCredits().addAll(Arrays.asList(
                 "BIG Shoutout naar de makers:",
                 "Ali",
@@ -61,7 +73,29 @@ public class Game extends GameApplication {
 
         settings.setApplicationMode(ApplicationMode.RELEASE);
     }
+    private void saveHighScore(String playerName, int score) {
+        String highScoreFilePath = "highscores.txt";
 
+        try {
+            // Check if the highscores file exists, if not, create it
+            File highScoreFile = new File(highScoreFilePath);
+            if (!highScoreFile.exists()) {
+                highScoreFile.createNewFile();
+            }
+
+            // Create a BufferedWriter to write to the highscores file
+            BufferedWriter writer = new BufferedWriter(new FileWriter(highScoreFile, true));
+
+            // Write the player's name and score to the file, separated by a comma
+            writer.write(playerName + "," + score);
+            writer.newLine();
+
+            // Close the BufferedWriter
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     protected void startHetSpel() {
 //        Initialising Players 1 and 2
@@ -70,6 +104,8 @@ public class Game extends GameApplication {
 
         FXGL.getGameWorld().addEntity(player1.getEntity());
         FXGL.getGameWorld().addEntity(player2.getEntity());
+
+
 
 
 //        Initialing Food
@@ -86,8 +122,12 @@ public class Game extends GameApplication {
 //        Level UI
 //        Creating Points Tallies
 
-        Label p1pointsCaller = new Label("Player 1 points:");
-        Label p2pointsCaller = new Label("Player 2 points:");
+        Label p1pointsCaller = new Label();
+        Label p2pointsCaller = new Label();
+
+        p1pointsCaller.textProperty().bind(FXGL.getWorldProperties().stringProperty("player 1").concat(" points:"));
+        p2pointsCaller.textProperty().bind(FXGL.getWorldProperties().stringProperty("player 2").concat(" points:"));
+
 
         p1pointsCaller.textProperty().bind(FXGL.getWorldProperties().stringProperty("player 1"));
         p2pointsCaller.textProperty().bind(FXGL.getWorldProperties().stringProperty("player 2"));
@@ -168,6 +208,10 @@ public class Game extends GameApplication {
 
                 }
                 timer.setText("TIME'S UP");
+                int scorePlayer1 = FXGL.getWorldProperties().getInt("kills player 1");
+                int scorePlayer2 = FXGL.getWorldProperties().getInt("kills player 2");
+                saveHighScore(username1, scorePlayer1);
+                saveHighScore(username2, scorePlayer2);
 //              maak highscore functie hier
 //                List<Highscore.Score> a = highscoreManager.getHighScores();
 //
@@ -187,8 +231,8 @@ public class Game extends GameApplication {
 
                 String blank = "0";
                 getDialogService().showMessageBox("Score:\n\n" +
-                        "Player 1: " + FXGL.getGameWorld().getProperties().intProperty("kills player 1").getValue() + "\n" +
-                        "Player 2: " + FXGL.getGameWorld().getProperties().intProperty("kills player 2").getValue());
+                        username1 + " " + FXGL.getGameWorld().getProperties().intProperty("kills player 1").getValue() + "\n" +
+                        username2 + " " + FXGL.getGameWorld().getProperties().intProperty("kills player 2").getValue());
 
 
                 Platform.runLater(() -> {
@@ -302,6 +346,10 @@ public class Game extends GameApplication {
             username1 = user1Field.getText();
             username2 = user2Field.getText();
 
+            FXGL.getWorldProperties().setValue("player 1", username1);
+            FXGL.getWorldProperties().setValue("player 2", username2);
+
+
 
 
             System.out.println("Login successful!");
@@ -331,8 +379,6 @@ public class Game extends GameApplication {
 
     @Override
     public void initGameVars(Map<String, Object> vars) {
-        vars.put("player 1", username1);
-        vars.put("player 2", username2);
         vars.put("kills player 1", 0);
         vars.put("kills player 2", 0);
     }
