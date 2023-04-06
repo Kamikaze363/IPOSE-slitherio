@@ -7,6 +7,7 @@ import com.almasb.fxgl.app.MenuItem;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.CollisionHandler;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,6 +20,7 @@ import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -28,8 +30,10 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 public class Game extends GameApplication {
 
     private int roundCounter = 1;
-    private int player1Wins = 0;
-    private int player2Wins = 0;
+    private double player1Wins = 0;
+    private double player2Wins = 0;
+    private  String username1 = "player1";
+    private  String username2 = "player2";
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setWidth(1200);
@@ -44,9 +48,10 @@ public class Game extends GameApplication {
         settings.setGameMenuEnabled(true);
         settings.setManualResizeEnabled(true);
         settings.setPreserveResizeRatio(true);
-//        settings.setIntroEnabled(true);
+        settings.setIntroEnabled(true);
 
         settings.setEnabledMenuItems(EnumSet.of(MenuItem.EXTRA));
+
         settings.getCredits().addAll(Arrays.asList(
                 "BIG Shoutout naar de makers:",
                 "Ali",
@@ -84,6 +89,9 @@ public class Game extends GameApplication {
         Label p1pointsCaller = new Label("Player 1 points:");
         Label p2pointsCaller = new Label("Player 2 points:");
 
+        p1pointsCaller.textProperty().bind(FXGL.getWorldProperties().stringProperty("player 1"));
+        p2pointsCaller.textProperty().bind(FXGL.getWorldProperties().stringProperty("player 2"));
+
         Label player1points = new Label("killsP1");
         Label player2points = new Label("killsP2");
 
@@ -110,10 +118,11 @@ public class Game extends GameApplication {
         p1pointsCaller.setVisible(true);
         p2pointsCaller.setVisible(true);
 
+
         player1points.textProperty().bind(FXGL.getWorldProperties().intProperty("kills player 1").asString());
         player2points.textProperty().bind(FXGL.getWorldProperties().intProperty("kills player 2").asString());
 
-        FXGL.getGameScene().setBackgroundColor(Color.BLACK);
+        FXGL.getGameScene().setBackgroundRepeat("C:\\Users\\rolan\\OneDrive - Hogeschool Leiden\\Periode 3\\IPOSE\\demo\\src\\main\\resources\\assets\\levels\\LevelBackground.png");
 
         FXGL.getGameScene().addUINode(p1pointsCaller);
         FXGL.getGameScene().addUINode(p2pointsCaller);
@@ -154,14 +163,57 @@ public class Game extends GameApplication {
                 } else {
                     winnerLabel.setText("It's a Tie!");
                     winnerLabel.setTranslateX(520);
+                    player1Wins += 0.5;
+                    player2Wins += 0.5;
+
                 }
                 timer.setText("TIME'S UP");
+//              maak highscore functie hier
+//                List<Highscore.Score> a = highscoreManager.getHighScores();
+//
+//                for (int i = 0; i < a.size(); i++){
+//                    String name = a.get(i).getName();
+//                    int score = a.get(i).getPoints();
+//                    System.out.println(name);
+//
+//                    message += name + " " + + score + "\n";
+//                }
+//
+//                message = message.replace("null", "");
+//                System.out.println(a);
+
+
                 timer.setTranslateX(500);
+
+                String blank = "0";
+                getDialogService().showMessageBox("Score:\n\n" +
+                        "Player 1: " + FXGL.getGameWorld().getProperties().intProperty("kills player 1").getValue() + "\n" +
+                        "Player 2: " + FXGL.getGameWorld().getProperties().intProperty("kills player 2").getValue());
+
+
+                Platform.runLater(() -> {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                roundCounter += 1;
+
+                if (roundCounter <= 3) {
+
+                } else {
+
+                }
 
 
             }
         }, Duration.seconds(1));
+
         FXGL.getGameScene().addUINode(timer);
+
+
     }
 
     @Override
@@ -192,6 +244,7 @@ public class Game extends GameApplication {
 
     }
 
+
     @Override
     protected void initUI() {
 
@@ -207,7 +260,6 @@ public class Game extends GameApplication {
 
         Button startGame = new Button("Start Game");
         startGame.setFont(Font.font("Arial", 24));
-//        startGame.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white; -fx-padding: 10px 20px;");
         startGame.setPrefSize(400, 50);
         startGame.setVisible(false);
         startGame.setTranslateX(400);
@@ -247,8 +299,8 @@ public class Game extends GameApplication {
         loginButton.setTranslateX(450);
         loginButton.setTranslateY(500);
         loginButton.setOnAction(e -> {
-            String username1 = user1Field.getText();
-            String username2 = user2Field.getText();
+            username1 = user1Field.getText();
+            username2 = user2Field.getText();
 
 
 
@@ -261,13 +313,6 @@ public class Game extends GameApplication {
             startGame.setVisible(true);
 
             startGame.setOnAction(d -> {
-                System.out.println("Login successful!");
-                user2Field.setVisible(false);
-                user1Field.setVisible(false);
-                loginButton.setVisible(false);
-                user2Label.setVisible(false);
-                userLabel.setVisible(false);
-                startGame.setVisible(true);
                 startHetSpel();
                 startGame.setVisible(false);
 
@@ -286,8 +331,8 @@ public class Game extends GameApplication {
 
     @Override
     public void initGameVars(Map<String, Object> vars) {
-//        vars.put("player 1", username1);
-//        vars.put("player 1", username2);
+        vars.put("player 1", username1);
+        vars.put("player 2", username2);
         vars.put("kills player 1", 0);
         vars.put("kills player 2", 0);
     }
