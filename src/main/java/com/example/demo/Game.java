@@ -20,7 +20,6 @@ import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,8 +29,7 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 public class Game extends GameApplication {
 
     private int roundCounter = 1;
-    private double player1Wins = 0;
-    private double player2Wins = 0;
+
     private  String username1 = "player1";
     private  String username2 = "player2";
     @Override
@@ -39,7 +37,7 @@ public class Game extends GameApplication {
         settings.setWidth(1200);
         settings.setHeight(700);
 
-        settings.setTitle("Slither.io 1v1");
+        settings.setTitle("Slither.io (dont touch)");
         settings.setVersion("17.2");
 
 //        settings.setProfilingEnabled(true);
@@ -48,7 +46,7 @@ public class Game extends GameApplication {
         settings.setGameMenuEnabled(true);
         settings.setManualResizeEnabled(true);
         settings.setPreserveResizeRatio(true);
-        settings.setIntroEnabled(true);
+//        settings.setIntroEnabled(true);
 
         settings.setEnabledMenuItems(EnumSet.of(MenuItem.EXTRA));
 
@@ -68,8 +66,26 @@ public class Game extends GameApplication {
         Player player1 = new Player(200, 400, Color.RED, EntityTypes.Player1, 50);
         Player player2 = new Player(1000, 400, Color.BLUE, EntityTypes.Player2, 50);
 
-        FXGL.getGameWorld().addEntity(player1.getEntity());
-        FXGL.getGameWorld().addEntity(player2.getEntity());
+        Label Level = new Label("Level" + roundCounter);
+        Level.setTranslateX(1100);
+        Level.setTranslateY(30);
+
+        Duration timerDuration = Duration.seconds(30);
+
+        FXGL.runOnce(() -> {
+            FireTowardsPlayerComponent fireTowardsPlayer1 = new FireTowardsPlayerComponent(300, 500, EntityTypes.Fireball, Color.ORANGE, player1.getEntity());
+            FireTowardsPlayerComponent fireTowardsPlayer2 = new FireTowardsPlayerComponent(700, 100, EntityTypes.Fireball, Color.ORANGE, player2.getEntity());
+        }, timerDuration);
+
+        Duration timerDuration2 = Duration.seconds(60);
+
+        FXGL.runOnce(() -> {
+            FireTowardsPlayerComponent fireTowardsPlayer12 = new FireTowardsPlayerComponent(1000, 400, EntityTypes.Fireball, Color.ORANGE, player1.getEntity());
+            FireTowardsPlayerComponent fireTowardsPlayer22 = new FireTowardsPlayerComponent(500, 300, EntityTypes.Fireball, Color.ORANGE, player2.getEntity());
+            FireTowardsPlayerComponent fireTowardsPlayer13 = new FireTowardsPlayerComponent(1100, 500, EntityTypes.Fireball, Color.ORANGE, player1.getEntity());
+            FireTowardsPlayerComponent fireTowardsPlayer24 = new FireTowardsPlayerComponent(700, 200, EntityTypes.Fireball, Color.ORANGE, player2.getEntity());
+            }, timerDuration2);
+
 
 
 //        Initialing Food
@@ -122,7 +138,7 @@ public class Game extends GameApplication {
         player1points.textProperty().bind(FXGL.getWorldProperties().intProperty("kills player 1").asString());
         player2points.textProperty().bind(FXGL.getWorldProperties().intProperty("kills player 2").asString());
 
-        FXGL.getGameScene().setBackgroundRepeat("C:\\Users\\rolan\\OneDrive - Hogeschool Leiden\\Periode 3\\IPOSE\\demo\\src\\main\\resources\\assets\\levels\\LevelBackground.png");
+        FXGL.getGameScene().setBackgroundRepeat("LevelBackground.png");
 
         FXGL.getGameScene().addUINode(p1pointsCaller);
         FXGL.getGameScene().addUINode(p2pointsCaller);
@@ -140,7 +156,7 @@ public class Game extends GameApplication {
 
 
         //Round Timer
-        Label timer = new Label("30");
+        Label timer = new Label("90");
         timer.setStyle("-fx-text-fill: white");
         timer.setFont(Font.font("Arial", 30));
         timer.setTranslateX(600);
@@ -153,39 +169,23 @@ public class Game extends GameApplication {
                 int killsP1 = FXGL.getWorldProperties().getInt("kills player 1");
                 int killsP2 = FXGL.getWorldProperties().getInt("kills player 2");
                 if (killsP1 > killsP2) {
-                    winnerLabel.setText("Player 1 Wins This Round!");
-                    winnerLabel.setTranslateX(400);
-                    player1Wins += 1;
+                    winnerLabel.setText("Player 1 Wins!");
+                    winnerLabel.setTranslateX(500);
                 } else if (killsP2 > killsP1) {
-                    winnerLabel.setText("Player 2 Wins This Round!");
-                    winnerLabel.setTranslateX(400);
-                    player2Wins += 1;
+                    winnerLabel.setText("Player 2 Wins!");
+                    winnerLabel.setTranslateX(500);
+
                 } else {
                     winnerLabel.setText("It's a Tie!");
                     winnerLabel.setTranslateX(520);
-                    player1Wins += 0.5;
-                    player2Wins += 0.5;
-
                 }
                 timer.setText("TIME'S UP");
-//              maak highscore functie hier
-//                List<Highscore.Score> a = highscoreManager.getHighScores();
-//
-//                for (int i = 0; i < a.size(); i++){
-//                    String name = a.get(i).getName();
-//                    int score = a.get(i).getPoints();
-//                    System.out.println(name);
-//
-//                    message += name + " " + + score + "\n";
-//                }
-//
-//                message = message.replace("null", "");
-//                System.out.println(a);
+
 
 
                 timer.setTranslateX(500);
 
-                String blank = "0";
+
                 getDialogService().showMessageBox("Score:\n\n" +
                         "Player 1: " + FXGL.getGameWorld().getProperties().intProperty("kills player 1").getValue() + "\n" +
                         "Player 2: " + FXGL.getGameWorld().getProperties().intProperty("kills player 2").getValue());
@@ -230,15 +230,27 @@ public class Game extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player1, EntityTypes.Food) {
             @Override
             protected void onCollision(Entity player, Entity food) {
-                FXGL.inc("kills player 1", +1);
+                FXGL.inc("kills player 1", +500);
                 food.removeFromWorld();
             }
         });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player2, EntityTypes.Food) {
             @Override
             protected void onCollision(Entity player, Entity food) {
-                FXGL.inc("kills player 2", +1);
+                FXGL.inc("kills player 2", +500);
                 food.removeFromWorld();
+            }
+        });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player2, EntityTypes.Fireball) {
+            @Override
+            protected void onCollision(Entity player, Entity fireball) {
+                FXGL.inc("kills player 2", -1);
+            }
+        });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player1, EntityTypes.Fireball) {
+            @Override
+            protected void onCollision(Entity player, Entity fireball) {
+                FXGL.inc("kills player 1", -1);
             }
         });
 
