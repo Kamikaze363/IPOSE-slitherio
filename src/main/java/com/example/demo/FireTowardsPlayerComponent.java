@@ -11,11 +11,6 @@ import javafx.scene.shape.Circle;
 
 public class FireTowardsPlayerComponent extends Component {
     private final Entity player;
-
-
-
-
-
     public FireTowardsPlayerComponent(double x, double y, EntityTypes type, Color color, Entity player){
         this.player = player;
         entity = FXGL.entityBuilder()

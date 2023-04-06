@@ -28,8 +28,6 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 
 public class Game extends GameApplication {
 
-    private int roundCounter = 1;
-
     private  String username1 = "player1";
     private  String username2 = "player2";
     @Override
@@ -37,8 +35,8 @@ public class Game extends GameApplication {
         settings.setWidth(1200);
         settings.setHeight(700);
 
-        settings.setTitle("Slither.io (dont touch)");
-        settings.setVersion("17.2");
+        settings.setTitle("Slither.io 1v1");
+        settings.setVersion("1.0");
 
 //        settings.setProfilingEnabled(true);
 
@@ -46,7 +44,7 @@ public class Game extends GameApplication {
         settings.setGameMenuEnabled(true);
         settings.setManualResizeEnabled(true);
         settings.setPreserveResizeRatio(true);
-//        settings.setIntroEnabled(true);
+        settings.setIntroEnabled(true);
 
         settings.setEnabledMenuItems(EnumSet.of(MenuItem.EXTRA));
 
@@ -66,13 +64,34 @@ public class Game extends GameApplication {
         Player player1 = new Player(200, 400, Color.RED, EntityTypes.Player1, 50);
         Player player2 = new Player(1000, 400, Color.BLUE, EntityTypes.Player2, 50);
 
-        Label level = new Label("Level" + roundCounter);
-        level.setTranslateX(1100);
-        level.setTranslateY(30);
+        Label level1 = new Label("Level 1");
+        level1.setTranslateX(1000);
+        level1.setTranslateY(30);
+        level1.setStyle("-fx-text-fill: white");
+        level1.setFont(Font.font("Arial", 30));
+
+        Label level2 = new Label("Level 2");
+        level2.setTranslateX(1000);
+        level2.setTranslateY(30);
+        level2.setStyle("-fx-text-fill: white");
+        level2.setFont(Font.font("Arial", 30));
+
+        Label level3 = new Label("Level 3");
+        level3.setTranslateX(1000);
+        level3.setTranslateY(30);
+        level3.setStyle("-fx-text-fill: white");
+        level3.setFont(Font.font("Arial", 30));
+        level1.setVisible(true);
+        level2.setVisible(false);
+        level3.setVisible(false);
 
         Duration timerDuration = Duration.seconds(30);
 
         FXGL.runOnce(() -> {
+            level1.setVisible(false);
+            level2.setVisible(true);
+            level3.setVisible(false);
+
             FireTowardsPlayerComponent fireTowardsPlayer1 = new FireTowardsPlayerComponent(300, 500, EntityTypes.Fireball, Color.ORANGE, player1.getEntity());
             FireTowardsPlayerComponent fireTowardsPlayer2 = new FireTowardsPlayerComponent(700, 100, EntityTypes.Fireball, Color.ORANGE, player2.getEntity());
         }, timerDuration);
@@ -80,11 +99,16 @@ public class Game extends GameApplication {
         Duration timerDuration2 = Duration.seconds(60);
 
         FXGL.runOnce(() -> {
+            level1.setVisible(false);
+            level2.setVisible(false);
+            level3.setVisible(true);
             FireTowardsPlayerComponent fireTowardsPlayer12 = new FireTowardsPlayerComponent(1000, 400, EntityTypes.Fireball, Color.ORANGE, player1.getEntity());
             FireTowardsPlayerComponent fireTowardsPlayer22 = new FireTowardsPlayerComponent(500, 300, EntityTypes.Fireball, Color.ORANGE, player2.getEntity());
-            FireTowardsPlayerComponent fireTowardsPlayer13 = new FireTowardsPlayerComponent(1100, 500, EntityTypes.Fireball, Color.ORANGE, player1.getEntity());
-            FireTowardsPlayerComponent fireTowardsPlayer24 = new FireTowardsPlayerComponent(700, 200, EntityTypes.Fireball, Color.ORANGE, player2.getEntity());
-            }, timerDuration2);
+            FireTowardsPlayerComponent fireTowardsPlayer13 = new FireTowardsPlayerComponent(1100, 200, EntityTypes.Fireball, Color.ORANGE, player1.getEntity());
+            FireTowardsPlayerComponent fireTowardsPlayer24 = new FireTowardsPlayerComponent(100, 200, EntityTypes.Fireball, Color.ORANGE, player2.getEntity());
+            FireTowardsPlayerComponent fireTowardsPlayer25 = new FireTowardsPlayerComponent(670, 600, EntityTypes.Fireball, Color.ORANGE, player2.getEntity());
+
+        }, timerDuration2);
 
 
 
@@ -117,17 +141,23 @@ public class Game extends GameApplication {
         player1points.setStyle("-fx-text-fill: white");
         player2points.setStyle("-fx-text-fill: white");
 
+        player1points.setFont(Font.font("Arial", 30));
+        player2points.setFont(Font.font("Arial", 30));
+
+        p1pointsCaller.setFont(Font.font("Arial", 30));
+        p2pointsCaller.setFont(Font.font("Arial", 30));
+
         p1pointsCaller.setTranslateX(30);
         p1pointsCaller.setTranslateY(30);
 
         p2pointsCaller.setTranslateX(30);
-        p2pointsCaller.setTranslateY(50);
+        p2pointsCaller.setTranslateY(70);
 
-        player1points.setTranslateX(120);
+        player1points.setTranslateX(200);
         player1points.setTranslateY(30);
 
-        player2points.setTranslateX(120);
-        player2points.setTranslateY(50);
+        player2points.setTranslateX(200);
+        player2points.setTranslateY(70);
 
         player1points.setVisible(true);
         player2points.setVisible(true);
@@ -142,7 +172,9 @@ public class Game extends GameApplication {
 
         FXGL.getGameScene().addUINode(p1pointsCaller);
         FXGL.getGameScene().addUINode(p2pointsCaller);
-        FXGL.getGameScene().addUINode(level);
+        FXGL.getGameScene().addUINode(level1);
+        FXGL.getGameScene().addUINode(level2);
+        FXGL.getGameScene().addUINode(level3);
 
         FXGL.getGameScene().addUINode(player1points);
         FXGL.getGameScene().addUINode(player2points);
@@ -188,25 +220,13 @@ public class Game extends GameApplication {
 
 
                 getDialogService().showMessageBox("Score:\n\n" +
-                        "Player 1: " + FXGL.getGameWorld().getProperties().intProperty("kills player 1").getValue() + "\n" +
-                        "Player 2: " + FXGL.getGameWorld().getProperties().intProperty("kills player 2").getValue());
+                        FXGL.getGameWorld().getProperties().stringProperty("player 1").getValue() + " : " + FXGL.getGameWorld().getProperties().intProperty("kills player 1").getValue() + "\n" +
+                        FXGL.getGameWorld().getProperties().stringProperty("player 2").getValue() + " : " + FXGL.getGameWorld().getProperties().intProperty("kills player 2").getValue()
+                );
+                FXGL.getGameWorld().removeEntities(player1.getEntity(), player2.getEntity());
+                getInput().clearAll();
+                getGameController().gotoMainMenu();
 
-
-                Platform.runLater(() -> {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
-
-                roundCounter += 1;
-
-                if (roundCounter <= 3) {
-
-                } else {
-
-                }
 
 
             }
@@ -231,14 +251,14 @@ public class Game extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player1, EntityTypes.Food) {
             @Override
             protected void onCollision(Entity player, Entity food) {
-                FXGL.inc("kills player 1", +500);
+                FXGL.inc("kills player 1", +250);
                 food.removeFromWorld();
             }
         });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityTypes.Player2, EntityTypes.Food) {
             @Override
             protected void onCollision(Entity player, Entity food) {
-                FXGL.inc("kills player 2", +500);
+                FXGL.inc("kills player 2", +250);
                 food.removeFromWorld();
             }
         });
@@ -267,7 +287,7 @@ public class Game extends GameApplication {
         addUINode(dpadView, 0, getAppHeight() - 290);
         addUINode(buttonsView, getAppWidth() - 280, getAppHeight() - 290);
 
-        FXGL.getGameScene().setBackgroundColor(Color.BLACK);
+        FXGL.getGameScene().setBackgroundRepeat("LevelBackground.png");
 
         FXGL.getGameScene().clearUINodes();
 
@@ -278,11 +298,26 @@ public class Game extends GameApplication {
         startGame.setTranslateX(400);
         startGame.setTranslateY(500);
 
+        Label info = new Label( "'Slither.io 1v1' is a  2-player game where \n" +
+                                    "each player aims to collect as many \n" +
+                                    "points as possible within a 90-second \n" +
+                                    "time limit. Players must avoid touching the \n" +
+                                    "dangerous fireballs that appear randomly \n" +
+                                    "throughout the game, as touching a fireball \n" +
+                                    "will deduct points from their score. The \n" +
+                                    "player with the most points at the end of \n" +
+                                    "the game wins!");
+        info.setFont(Font.font("Arial", 24));
+        info.setStyle("-fx-text-fill: white");
+        info.setTranslateX(400);
+        info.setTranslateY(150);
+        info.setVisible(false);
 
         Pane containerPane = new Pane();
 
         Label userLabel = new Label("Player 1:");
         userLabel.setFont(Font.font("Arial", 24));
+        userLabel.setStyle("-fx-text-fill: white");
         userLabel.setTranslateX(290);
         userLabel.setTranslateY(300);
 
@@ -296,6 +331,7 @@ public class Game extends GameApplication {
 
         Label user2Label = new Label("Player 2:");
         user2Label.setFont(Font.font("Arial", 24));
+        user2Label.setStyle("-fx-text-fill: white");
         user2Label.setTranslateX(290);
         user2Label.setTranslateY(400);
 
@@ -315,6 +351,9 @@ public class Game extends GameApplication {
             username1 = user1Field.getText();
             username2 = user2Field.getText();
 
+            FXGL.getWorldProperties().setValue("player 1", username1);
+            FXGL.getWorldProperties().setValue("player 2", username2);
+
 
 
             System.out.println("Login successful!");
@@ -324,10 +363,12 @@ public class Game extends GameApplication {
             user2Label.setVisible(false);
             userLabel.setVisible(false);
             startGame.setVisible(true);
+            info.setVisible(true);
 
             startGame.setOnAction(d -> {
                 startHetSpel();
                 startGame.setVisible(false);
+                info.setVisible(false);
 
             });
 
@@ -335,7 +376,7 @@ public class Game extends GameApplication {
 // Voeg hier de code toe om de gebruiker in te loggen.
 
         });
-        containerPane.getChildren().addAll(userLabel, user1Field, user2Label, user2Field, startGame, loginButton);
+        containerPane.getChildren().addAll(userLabel, user1Field, user2Label, user2Field, startGame, loginButton, info);
         FXGL.getGameScene().addUINode(containerPane);
 
     }
@@ -344,8 +385,6 @@ public class Game extends GameApplication {
 
     @Override
     public void initGameVars(Map<String, Object> vars) {
-        vars.put("player 1", username1);
-        vars.put("player 2", username2);
         vars.put("kills player 1", 0);
         vars.put("kills player 2", 0);
     }
